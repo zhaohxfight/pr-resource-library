@@ -3,14 +3,46 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta content="telephone=no" name="format-detection"/>
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>pr-resource-library</title>
+    <script>
+      !function(e){var t=e.document,n=t.documentElement,i="orientationchange"in e?"orientationchange":"resize",a=function e(){var t=n.getBoundingClientRect().width;return n.style.fontSize=5*Math.max(Math.min(t/750*20,11.2),8.55)+"px",e}();n.setAttribute("data-dpr",e.navigator.appVersion.match(/iphone/gi)?e.devicePixelRatio:1),/iP(hone|od|ad)/.test(e.navigator.userAgent)&&(t.documentElement.classList.add("ios"),parseInt(e.navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/)[1],10)>=8&&t.documentElement.classList.add("hairline")),t.addEventListener&&(e.addEventListener(i,a,!1),t.addEventListener("DOMContentLoaded",a,!1))}(window);
+    </script>
+    <script>
+        var u = navigator.userAgent; //获取用户设备
+        window.isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        // 用于创建桥接对象的函数
+        window.connectWebViewJavascriptBridge = function (callback) {
+          // 如果桥接对象已存在，则直接调用callback函数
+          if (window.WebViewJavascriptBridge) {
+            callback(WebViewJavascriptBridge)
+          }
+          // 否则添加一个监听器来执行callback函数
+          else {
+            document.addEventListener('WebViewJavascriptBridgeReady', function() {
+              callback(WebViewJavascriptBridge)
+            }, false)
+          }
+        }
+    
+        function hideNavigationBar() {
+          window.webkit.messageHandlers.hideNavigationBar.postMessage('隐藏导航栏');
+        }
+        if (!window.isIOS) {
+          window.connectWebViewJavascriptBridge(function(bridge) {
+            bridge.callHandler('hideNavigationBar', function(response) {
+            });
+          });
+        } else {
+          hideNavigationBar();
+        }
+    </script>
+    <title>公关资源库</title>
   </head>
   <body>
-    <noscript>
-      <strong>We're sorry but pr-resource-library doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
