@@ -1,7 +1,7 @@
 <template>
   <div class="about-luru page-content">
     <yd-flexbox ref="tabselectMain">
-      <yd-flexbox-item><div class="tabselect" @click="showSelect()">{{radio1 | radioType}}<span :class="{'yd-accordion-rotated': show1}" class="yd-accordion-head-arrow"></span></div></yd-flexbox-item>
+      <yd-flexbox-item><div class="tabselect" :class="{'selectedbtn': show1}" @click="showSelect()">{{radio1 | radioType}}<span :class="{'yd-accordion-rotated': show1}" class="yd-accordion-head-arrow"></span></div></yd-flexbox-item>
     </yd-flexbox>
     <yd-list theme="4">
       <yd-list-item v-for="item in list" :key="item.id" @click.native="gotoSearchDetial(item.id)">
@@ -42,6 +42,7 @@ export default {
     return {
       show1: false,
       show2: false,
+      allh: '',
       from: '',
       setMes: {},
       result: [],
@@ -55,6 +56,7 @@ export default {
   created() {
   },
   mounted() {
+    this.allh = window.innerHeight
     this.getResult()
   },
   activated () {
@@ -76,9 +78,9 @@ export default {
       const par = {
         type: this.radio1
       }
-      this.$axios.post(this.baseUrl + 'my/list', par)
+      this.$axios.post(this.baseUrl + 'my/lists', par)
       .then(response => {
-        this.list = response.data.list.data
+        this.list = response.data.data.list
         console.log(this.list)
       }).catch(() => {
       });
@@ -96,12 +98,10 @@ export default {
     },
     setBottom() {
       document.getElementById('scrollView').scrollTop = 0
-      const allh = window.innerHeight
+
       let pe =  (document.getElementsByTagName('html')[0].style.fontSize)
-      pe = parseInt(pe.substring(0, pe.length - 2)) + 30
-      console.log(pe)
-      console.log(allh)
-      const pre = (1 - (pe / allh)) * 100
+      pe = parseInt(pe.substring(0, pe.length - 2)) + 36
+      const pre = (1 - (pe / this.allh)) * 100
       this.$refs['lrType'].$el.children[1].style.bottom = pre + '%'
     },
     reSelect() {
@@ -145,6 +145,19 @@ export default {
     margin-bottom: 2px;
   }
 }
+.tabselect::after{
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  width: 100%;
+  -webkit-transform: scaleY(.5);
+  transform: scaleY(.5);
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  bottom: 0;
+  border-bottom: 1px solid #d8d8d8;
+}
 .btn1{
   color: #888;
   background-color: #fff;
@@ -156,6 +169,7 @@ export default {
   border-top: 1px solid #e3e3e3;
 }
 .searchPop {
+  max-width: 750px;
   .yd-popup-bottom {
     -webkit-transform: translateY(100%);
     transform: translateY(100%);
@@ -199,11 +213,21 @@ export default {
   padding: 0 5%;
  .yd-radio {
    display: inherit;
-   line-height: .7rem;
-   .yd-radio-icon {
+   line-height: .8rem;
+    .yd-radio-icon {
      float: right;
+     margin-top:.2rem;
      color: #eb4a4a!important;
-   }
- }
+    }
+  }
+  .yd-radio>input[type=radio]:checked+.yd-radio-icon + .yd-radio-text{
+    color: #eb4a4a!important;
+  }
+}
+.selectedbtn{
+  color: #eb4a4a;
+  .yd-accordion-head-arrow:after{
+    border-bottom: 7px solid #eb4a4a;
+  }
 }
 </style>

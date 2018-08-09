@@ -1,5 +1,5 @@
 <template>
-  <div class="about-luru page-content">
+  <div class="about-shenhe page-content">
     <!-- <yd-flexbox ref="tabselectMain">
       <yd-flexbox-item><div class="tabselect" @click="showSelect()">{{radio1 | radioType}}<span :class="{'yd-accordion-rotated': show1}" class="yd-accordion-head-arrow"></span></div></yd-flexbox-item>
     </yd-flexbox> -->
@@ -42,6 +42,7 @@ export default {
       show1: false,
       show2: false,
       from: '',
+      allh: '',
       setMes: {},
       result: [],
       radio1: 'submit',
@@ -54,6 +55,7 @@ export default {
   created() {
   },
   mounted() {
+    this.allh = window.innerHeight
     this.getResult()
   },
   activated () {
@@ -71,12 +73,14 @@ export default {
   },
   methods: {
     getResult() {
+      console.log(11)
       const par = {
         type: this.radio1
       }
       this.$axios.post(this.baseUrl + 'my/examine')
       .then(response => {
-        this.list = response.data.list.data
+        console.log(response.data)
+        this.list = response.data.data.list
         console.log(this.list)
       }).catch(() => {
       });
@@ -94,12 +98,11 @@ export default {
     },
     setBottom() {
       document.getElementById('scrollView').scrollTop = 0
-      const allh = window.innerHeight
       let pe =  (document.getElementsByTagName('html')[0].style.fontSize)
-      pe = parseInt(pe.substring(0, pe.length - 2)) + 30
+      pe = parseInt(pe.substring(0, pe.length - 2)) + 35
       console.log(pe)
       console.log(allh)
-      const pre = (1 - (pe / allh)) * 100
+      const pre = (1 - (pe / this.allh)) * 100
       this.$refs['lrType'].$el.children[1].style.bottom = pre + '%'
     },
     reSelect() {
@@ -115,7 +118,7 @@ export default {
 };
 </script>
 <style lang="scss">
-.about-luru {
+.about-shenhe {
   .yd-search-input {
     background-color: #fff;
     .search-input {
@@ -142,6 +145,19 @@ export default {
     margin-left: .1rem;
     margin-bottom: 2px;
   }
+}
+.tabselect::after{
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  width: 100%;
+  -webkit-transform: scaleY(.5);
+  transform: scaleY(.5);
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  bottom: 0;
+  border-bottom: 1px solid #d8d8d8;
 }
 .btn1{
   color: #888;
@@ -197,9 +213,10 @@ export default {
   padding: 0 5%;
  .yd-radio {
    display: inherit;
-   line-height: .7rem;
+   line-height: .8rem;
    .yd-radio-icon {
      float: right;
+     margin-top: .2rem;
      color: #eb4a4a!important;
    }
  }

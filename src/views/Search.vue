@@ -57,6 +57,7 @@ export default {
   .imgMain {
     width: 100%;
     position: relative;
+    margin: .5rem 0;
     .img1{
       width: 100%;
     }
@@ -66,7 +67,7 @@ export default {
       top: 50%;
       left: 50%;
       margin-top: -1.5rem;
-      margin-left: -1.2rem;
+      margin-left: -1.4rem;
       -webkit-transform: rotate(360deg);
       animation: rotation 60s linear infinite;
       -moz-animation: rotation 60s linear infinite;
@@ -76,9 +77,12 @@ export default {
   }
   .yd-search-input {
     background-color: #fff;
+    padding: 10px 0 10px .6rem;
     .search-input {
       border: 1px solid #eb4a4a;
-      border-radius: 20px;
+      border-radius: 5px;
+      margin-right: .6rem;
+      height: .7rem;
     }
   }
   .yd-search-input::before {
@@ -94,13 +98,14 @@ export default {
       text-align: center;
       height: 30px;
       line-height: 30px;
-      margin: 10px 15px;
+      margin: 10px 4px;
     }
     .yd-btn {
       width: 100%;
       background-color: #f7f7f7;
       color: #888;
-      border-radius: 20px;
+      border-radius: 5px;
+      padding: 0;
     }
   }
 }

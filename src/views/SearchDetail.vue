@@ -10,7 +10,7 @@
                 <span v-if="item3.name && item3.name !== ''">{{item3.name}}:</span>{{item3.value}}  
               </div>
             </div>
-            <div v-else>{{item2.value}}</div>
+            <div v-else style="max-width:4.3rem">{{item2.value}}</div>
           </div>
         </div>
       </yd-tab-panel>
@@ -68,12 +68,18 @@ export default {
   .yd-tab-panel-item {
     padding: .5rem;
   }
+  .yd-tab-nav{
+    width: 100%!important;
+  }
+  .yd-tab-panel {
+    margin-top: 10px;
+  }
   .dataList{
     margin-bottom: .25rem;
     .data-title {
       display: inline-block;
       color: #666;
-      font-size: .26rem;
+      font-size: .28rem;
       width: 1.47rem;
       text-align:justify;
       text-align-last: justify;
