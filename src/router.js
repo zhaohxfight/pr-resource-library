@@ -4,6 +4,7 @@ import Search from './views/Search.vue'
 import About from './views/About.vue'
 import AboutLuru from './views/AboutLuru.vue'
 import AboutSenhe from './views/AboutSenhe.vue'
+import AboutShowcang from './views/AboutShoucang.vue'
 import SearchResult from './views/SearchResult.vue'
 import SearchDetail from './views/SearchDetail.vue'
 
@@ -56,7 +57,15 @@ export default new Router({
       name: 'aboutSenhe',
       component: AboutSenhe,
       meta: {
-        keepAlive: true
+        keepAlive: false
+      }
+    },
+    {
+      path: '/aboutShowcang',
+      name: 'aboutShowcang',
+      component: AboutShowcang,
+      meta: {
+        keepAlive: false
       }
     }
   ]

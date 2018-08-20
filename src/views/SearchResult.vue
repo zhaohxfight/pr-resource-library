@@ -1,30 +1,43 @@
 <template ref="searchresult">
-  <div class="search-result page-content">
+  <div class="search-result">
     <yd-search ref="searchinput" v-model="filters.name" :on-submit="submitHandler" :on-cancel="cancelHandler" top="1rem"></yd-search>
-    <yd-flexbox ref="tabselectMain">
+    <yd-flexbox ref="tabselectMain" style="background: #fff;" :class="{'pb10': show1,'pb102': show2}">
       <yd-flexbox-item><div class="tabselect se1" :class="{'tabselect1': !show1, 'selectedbtn': show1}" @click="showSelect() ">资源类别<span :class="{'yd-accordion-rotated': show1}" class="yd-accordion-head-arrow"></span></div></yd-flexbox-item>
       <yd-flexbox-item><div class="tabselect" :class="{'tabselect1': !show2, 'selectedbtn': show2}" @click="showRadio()">性别<span :class="{'yd-accordion-rotated': show2}" class="yd-accordion-head-arrow"></span></div></yd-flexbox-item>
     </yd-flexbox>
-    <yd-list theme="4">
-      <yd-list-item v-for="item in list" :key="item.id" @click.native="gotoSearchDetial(item.id)">
-        <img slot="img" :src="item.head_pic">
-        <span slot="title">{{item.name}}</span>
-        <yd-list-other slot="other">
-            <div>
-              <div class="listMes">性别: {{item.sex}}</div>
-              <div class="listMes">名族: {{item.nation}}</div>
-              <div class="listMes">出生年月: {{item.birthday}}</div>
-              <div class="listMes">企业名称: {{item.company[0]}}</div>
-            </div>
-        <div class="listbadge"><yd-badge shape="square">{{item.type[0]}}</yd-badge></div>
-        </yd-list-other>
-      </yd-list-item>
-    </yd-list>
+    <div class="asscroll">
+      <yd-infinitescroll :callback="getResult" ref="infinitescrollDemo">
+        <yd-list theme="4" slot="list">
+          <yd-list-item v-for="item in list" :key="item.id" @click.native="gotoSearchDetial(item.id)">
+            <img slot="img" :src="item.head_pic">
+            <span slot="title">{{item.name}}</span>
+            <yd-list-other slot="other">
+                <div>
+                  <div class="listMes">性别: {{item.sex}}</div>
+                  <div class="listMes">名族: {{item.nation}}</div>
+                  <div class="listMes">出生年月: {{item.birthday}}</div>
+                  <div class="listMes">企业名称: {{item.company[0]}}</div>
+                </div>
+            <div class="listbadge"><yd-badge shape="square">{{item.type[0]}}</yd-badge></div>
+            </yd-list-other>
+          </yd-list-item>
+        </yd-list>
+        <!-- 数据全部加载完毕显示 -->
+        <span slot="doneTip">没有更多数据啦~~</span>
+
+        <!-- 加载中提示，不指定，将显示默认加载中图标 -->
+        <img slot="loadingTip" src="http://static.ydcss.com/uploads/ydui/loading/loading10.svg"/>
+
+      </yd-infinitescroll>      
+    </div>
+
     <yd-popup v-model="show1" width="100%" class="searchPop" ref="zyType">  
       <div style="background-color:#fff;">
-          <yd-checkbox-group v-model="filters.type" class="setcheckbox">
-            <yd-checkbox v-for="item in setMes.type" :val="item.id" :key="item.id">{{item.name}}</yd-checkbox> 
-          </yd-checkbox-group>
+          <div style="width:86%;margin: 10px auto;">
+            <yd-checkbox-group v-model="filters.type" class="setcheckbox">
+              <yd-checkbox v-for="item in setMes.type" :val="item.id" :key="item.id">{{item.name}}</yd-checkbox> 
+            </yd-checkbox-group>
+          </div>
           <yd-flexbox ref="tabselectMain">
             <yd-flexbox-item><div class="tabselect btn1" @click="reSelect()">重置</div></yd-flexbox-item>
             <yd-flexbox-item><div class="tabselect btn2" @click="selectHandle()">确定</div></yd-flexbox-item>
@@ -33,16 +46,18 @@
     </yd-popup>
     <yd-popup v-model="show2" width="100%" class="searchPop" ref="seType">  
       <div style="background-color:#fff;">
-          <yd-radio-group v-model="filters.sex" class="setcheckbox">
-            <yd-radio v-for="item in setMes.sex" :val="item.id" :key="item.id">{{item.name}}</yd-radio> 
-          </yd-radio-group>
+          <div style="width:86%;margin: 10px auto;">
+            <yd-radio-group v-model="filters.sex" class="setcheckbox">
+              <yd-radio v-for="item in setMes.sex" :val="item.id" :key="item.id">{{item.name}}</yd-radio> 
+            </yd-radio-group>
+          </div>
           <yd-flexbox ref="tabselectMain">
             <yd-flexbox-item><div class="tabselect btn1" @click="show2 = false">取消</div></yd-flexbox-item>
             <yd-flexbox-item><div class="tabselect btn2" @click="selectHandle()">确定</div></yd-flexbox-item>
           </yd-flexbox>
       </div>
     </yd-popup>
-    <div v-if="list.length === 0" class="nodata">暂无数据...</div>
+    <div v-if="list.length === 0 && nodata" class="nodata">暂无数据...</div>
   </div>
 </template>
 
@@ -59,19 +74,19 @@ export default {
     return {
       show1: false,
       show2: false,
+      nodata: true,
       from: '',
       allh: '',
       setMes: {},
       result: [],
-      filters: {
+      filters: {  
         name: '',
+        page: 1,
+        perpage: 10,
         type: [],
         sex: ''
       },
-      list: [{
-        type: [],
-        company: []
-      }]
+      list: [ ]
     };
   },
   created() {
@@ -80,26 +95,14 @@ export default {
     this.allh = window.innerHeight
     this.$refs['searchinput'].$refs.search.$el.children[0].focus()
     this.getSetting()
-    if(this.$route.query.key && this.$route.query.key !== '') {
-      this.filters.name = this.$route.query.key
-      this.getResult()
-    }
   },
   activated () {
     setTimeout(() => {
-      if (this.from === '/' && !this.$route.query.key) {
+      if (this.from === '/' && this.$route.query.type && this.$route.query.type !== ''){
         this.$refs['searchinput'].$refs.search.$el.children[0].focus()
-        this.filters = {
-          name: '',
-          sex: '',
-          type: []
-        }
-        this.list = []
-      } else if (this.from === '/' && this.$route.query.key && this.$route.query.key !== ''){
-        this.filters.name = this.$route.query.key
+        this.filters.name = '' 
         this.filters.sex = ''
-        this.filters.type = []
-        this.getResult()
+        this.filters.type = JSON.parse(this.$route.query.type)
       }
     },100)
   },
@@ -110,13 +113,22 @@ export default {
         vm.from = from.path;
     })
   },
-  methods: {
+  methods: {      
     getResult() {
-      console.log('请求')
+      this.nodata = false
       this.$axios.post(this.baseUrl + 'search/index', this.filters)
       .then(response => {
-        this.list = response.data.list.data
-        console.log(this.list)
+        this.$dialog.loading.close();
+        const _list = response.data.list.data
+        this.list.push(..._list)
+        if (_list.length < this.filters.perpage) {
+            /* 所有数据加载完毕 */
+            this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
+            return;
+        }
+        /* 单次请求数据完毕 */
+        this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.finishLoad');
+        this.filters.page ++;
       }).catch(() => {
       });
     },
@@ -124,10 +136,19 @@ export default {
       this.$axios.get(this.baseUrl + 'search/setting')
       .then(response => {
         this.setMes = response.data.data
+        console.log(JSON.parse(this.$route.query.type))
+        if(this.$route.query.type && this.$route.query.type !== '') {
+          setTimeout(() => {
+            this.filters.type = JSON.parse(this.$route.query.type)
+          },100)
+        }
       }).catch(() => {
       });
     },
     selectHandle() {
+      this.$dialog.loading.open('加载中...');
+      this.list = []
+      this.filters.page = 1
       this.getResult()
       this.show1 = false
       this.show2 = false
@@ -136,6 +157,9 @@ export default {
       this.$dialog.toast({ mes: `搜索：${item}` });
     },
     submitHandler(value) {
+      this.$dialog.loading.open('加载中...');
+      this.list = []
+      this.filters.page = 1
       this.getResult()
     },
     cancelHandler() {
@@ -181,12 +205,21 @@ export default {
       color: #eb4a4a;
     }
   }
+  .asscroll {
+    width: 100%;
+    height: calc(100vh - 1rem - 90px);
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: scroll!important;
+  }
 }
 .nodata {
   width: 100%;
   text-align: center;
   color: #888;
-  margin-top: 3rem;
+  top: 0;
+  font-size: .28rem;
+  position: fixed;
 }
 .tabselect {
   text-align: center;
@@ -243,28 +276,6 @@ export default {
     border-bottom: 7px solid #eb4a4a;
   }
 }
-.searchPop {
-  .yd-popup-bottom {
-    -webkit-transform: translateY(100%);
-    transform: translateY(100%);
-    right: 0;
-    bottom: 100%;
-    display: none;
-    max-width: 750px;
-  }
-  .yd-popup-show {
-    
-    -webkit-transform: translateY(100%)!important;
-    transform: translateY(100%)!important;
-    display: block;
-  }
-  .yd-mask {
-    background-color: transparent!important;
-  }
-  .yd-popup-content {
-   box-shadow: 0px 3px 9px #e7e6e6;
-  }
-}
 .yd-list-item {
   .yd-list-mes {
     position: relative;
@@ -284,28 +295,10 @@ export default {
     } 
   }
 }
-.setcheckbox {
-  margin: .3rem;
-  .yd-checkbox-icon, .yd-radio-icon {
-    display: none;
-  }
-  .yd-checkbox, .yd-radio {
-    width: 33%;
-    text-align: center;
-    padding: 10px;
-  }
-  .yd-checkbox-text, .yd-radio-text{
-    width: 100%;
-    display: inline-block;
-    padding: 4px 0;
-    background-color: #f7f7f7;
-    color: #8888;
-    border-radius: 5px;
-    font-size: .24rem;
-  }
-  .yd-checkbox>input[type=checkbox]:checked+.yd-checkbox-icon + .yd-checkbox-text,  .yd-radio>input[type=radio]:checked+.yd-radio-icon + .yd-radio-text{
-    color: #fff!important;
-    background-color: #eb4a4a!important;
-  }
+.pb10 {
+  padding-bottom: 10px;
+}
+.pb102 {
+  padding-bottom: 10px;
 }
 </style>

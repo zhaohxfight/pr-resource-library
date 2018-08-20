@@ -5,7 +5,7 @@
         <img slot="icon" src="../assets/lr.png">
         <span slot="text">我的录入</span>
     </yd-grids-item>
-    <yd-grids-item >
+    <yd-grids-item link="/aboutShowcang">
         <yd-icon slot="icon" name="star" color="#000"></yd-icon>
         <span slot="text">我的收藏</span>
     </yd-grids-item>

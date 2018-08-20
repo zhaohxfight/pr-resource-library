@@ -1,23 +1,34 @@
 <template>
-  <div class="about-luru page-content">
+  <div class="about-luru ">
     <yd-flexbox ref="tabselectMain">
-      <yd-flexbox-item><div class="tabselect" :class="{'selectedbtn': show1}" @click="showSelect()">{{radio1 | radioType}}<span :class="{'yd-accordion-rotated': show1}" class="yd-accordion-head-arrow"></span></div></yd-flexbox-item>
+      <yd-flexbox-item><div class="tabselects" :class="{'selectedbtn': show1}" @click="showSelect()">{{radio1 | radioType}}<span :class="{'yd-accordion-rotated': show1}" class="yd-accordion-head-arrow"></span></div></yd-flexbox-item>
     </yd-flexbox>
-    <yd-list theme="4">
-      <yd-list-item v-for="item in list" :key="item.id" @click.native="gotoSearchDetial(item.id)">
-        <img slot="img" :src="item.head_pic">
-        <span slot="title">{{item.name}}</span>
-        <yd-list-other slot="other">
-            <div>
-              <div class="listMes">性别: {{item.sex}}</div>
-              <div class="listMes">名族: {{item.nation}}</div>
-              <div class="listMes">出生年月: {{item.birthday}}</div>
-              <div class="listMes">企业名称: {{item.company[0]}}</div>
-            </div>
-        <div class="listbadge"><yd-badge shape="square">{{item.type[0]}}</yd-badge></div>
-        </yd-list-other>
-      </yd-list-item>
-    </yd-list>
+    <div class="inscroll">
+      <yd-infinitescroll :callback="getResult" ref="infinitescrollDemo">
+          <yd-list theme="4" slot="list">
+            <yd-list-item v-for="item in list" :key="item.id" @click.native="gotoSearchDetial(item.id)">
+              <img slot="img" :src="item.head_pic">
+              <span slot="title">{{item.name}}</span>
+              <yd-list-other slot="other">
+                  <div>
+                    <div class="listMes">性别: {{item.sex}}</div>
+                    <div class="listMes">名族: {{item.nation}}</div>
+                    <div class="listMes">出生年月: {{item.birthday}}</div>
+                    <div class="listMes">企业名称: {{item.company[0]}}</div>
+                  </div>
+              <div class="listbadge"><yd-badge shape="square">{{item.type[0]}}</yd-badge></div>
+              </yd-list-other>
+            </yd-list-item>
+          </yd-list>
+            <!-- 数据全部加载完毕显示 -->
+          <span slot="doneTip">没有更多数据...</span>
+
+          <!-- 加载中提示，不指定，将显示默认加载中图标 -->
+          <img slot="loadingTip" src="http://static.ydcss.com/uploads/ydui/loading/loading10.svg"/>
+
+      </yd-infinitescroll>
+    </div>
+
     <yd-popup v-model="show1" width="100%" class="searchPop" ref="lrType">  
       <div style="background-color:#fff;" class="setselect">
         <yd-radio-group v-model="radio1">
@@ -48,7 +59,9 @@ export default {
       result: [],
       radio1: 'submit',
       filters: {
-        type: 'submit'
+        type: 'submit',
+        page: 1,
+        perpage: 10
       },
       list: []
     };
@@ -57,9 +70,8 @@ export default {
   },
   mounted() {
     this.allh = window.innerHeight
-    this.getResult()
-  },
-  activated () {
+    this.$dialog.loading.open('加载中...');
+    this.list = []
     this.getResult()
   },
   filters: {
@@ -75,15 +87,28 @@ export default {
   },
   methods: {
     getResult() {
-      const par = {
-        type: this.radio1
-      }
-      this.$axios.post(this.baseUrl + 'my/lists', par)
+      this.filters.type = this.radio1
+      this.$axios.post(this.baseUrl + 'my/lists', this.filters)
       .then(response => {
-        this.list = response.data.data.list
+        this.$dialog.loading.close();
+        const _list = response.data.data.list
+        this.list.push(..._list)
         console.log(this.list)
+        if (_list.length < this.filters.perpage) {
+            /* 所有数据加载完毕 */
+            this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.loadedDone');
+            return;
+        }
+        /* 单次请求数据完毕 */
+        this.$refs.infinitescrollDemo.$emit('ydui.infinitescroll.finishLoad');
+        this.filters.page ++;
       }).catch(() => {
+
       });
+    },
+    loadList() {
+      this.filters.page ++
+      this.getResult()
     },
     selectHandle() {
       this.getResult()
@@ -110,6 +135,8 @@ export default {
   },
   watch: {
     radio1(val) {
+      this.$dialog.loading.open('加载中...');
+      this.list = []
       this.getResult()
       this.show1 = false
     }
@@ -127,6 +154,16 @@ export default {
       color: #eb4a4a;
     }
   }
+  .inscroll {
+    width: 100%;
+    height: calc(100vh - 1rem - 40px);
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: scroll!important;
+  }
+}
+.yd-flexbox-item {
+  position: relative;
 }
 .nodata {
   width: 100%;
@@ -134,7 +171,7 @@ export default {
   color: #888;
   margin-top: 3rem;
 }
-.tabselect {
+.tabselects {
   text-align: center;
   line-height: 40px;
   font-size: .28rem;
@@ -145,7 +182,7 @@ export default {
     margin-bottom: 2px;
   }
 }
-.tabselect::after{
+.tabselects::after{
   content: "";
   position: absolute;
   z-index: 0;
@@ -167,28 +204,6 @@ export default {
   color: #fff;
   background-color: #eb4a4a;
   border-top: 1px solid #e3e3e3;
-}
-.searchPop {
-  max-width: 750px;
-  .yd-popup-bottom {
-    -webkit-transform: translateY(100%);
-    transform: translateY(100%);
-    right: 0;
-    bottom: 100%;
-    display: none;
-  }
-  .yd-popup-show {
-    
-    -webkit-transform: translateY(100%)!important;
-    transform: translateY(100%)!important;
-    display: block;
-  }
-  .yd-mask {
-    background-color: transparent!important;
-  }
-  .yd-popup-content {
-   box-shadow: 0px 3px 9px #e7e6e6;
-  }
 }
 .yd-list-item {
   .yd-list-mes {
@@ -230,4 +245,5 @@ export default {
     border-bottom: 7px solid #eb4a4a;
   }
 }
+
 </style>

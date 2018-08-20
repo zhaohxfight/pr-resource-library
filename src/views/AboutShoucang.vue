@@ -85,7 +85,7 @@ export default {
   methods: {
     getResult() {
       this.nodata = false
-      this.$axios.post(this.baseUrl + 'my/examine', this.filters)
+      this.$axios.post(this.baseUrl + 'my/collect', this.filters)
       .then(response => {
         this.$dialog.loading.close();
         const _list = response.data.data.list

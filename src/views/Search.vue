@@ -4,19 +4,12 @@
       <img class="img1" src="../assets/img1.gif">
       <img class="img2" src="../assets/img2.png" alt="">
     </div>
+
     <yd-search v-model="value1" @click.native="gotoSearchResult" placeholder="请输入搜索内容"></yd-search>
     <div class="buttonList">
-      <yd-flexbox>
-          <yd-flexbox-item><yd-button  @click.native="handleClick('全部')" type="danger">全部</yd-button></yd-flexbox-item>
-          <yd-flexbox-item><yd-button  @click.native="handleClick('职业经理人')" type="danger">职业经理人</yd-button></yd-flexbox-item>
-          <yd-flexbox-item><yd-button  @click.native="handleClick('专家')" type="danger">专家</yd-button></yd-flexbox-item>
-      </yd-flexbox>
-      
-      <yd-flexbox>
-          <yd-flexbox-item><yd-button  @click.native="handleClick('媒体人')" type="danger">媒体人</yd-button></yd-flexbox-item>
-          <yd-flexbox-item><yd-button  @click.native="handleClick('公务员')" type="danger">公务员</yd-button></yd-flexbox-item>
-          <yd-flexbox-item><yd-button  @click.native="handleClick('其他')" type="danger">其他</yd-button></yd-flexbox-item>
-      </yd-flexbox>      
+      <yd-checkbox-group v-model="types" class="setcheckbox" style="margin:0">
+        <yd-checkbox v-for="item in setMes" :val="item.id" :key="item.id">{{item.name}}</yd-checkbox>
+      </yd-checkbox-group>
     </div>
 
   </div>
@@ -34,15 +27,55 @@ export default {
   data() {
     return {
       value1: "",
+      types: [],
+      setMes: [],
       result: []
     };
   },
+  created() {
+    this.getBaseData()
+  },
+  mounted() {
+    this.getSetting()
+  },
+  activated () {
+    this.types = []
+  },
   methods: {
     gotoSearchResult() {
-      this.$router.push('SearchResult')
+      // this.$router.push('SearchResult')
+      this.$router.push({path:'/SearchResult',query:{type:JSON.stringify(this.types)}})
     },
-    handleClick(key) {
-      this.$router.push({path:'/SearchResult',query:{key:key}})
+    getSetting() {
+      this.$axios.get(this.baseUrl + 'search/setting')
+      .then(response => {
+        this.setMes = response.data.data.type
+      }).catch(() => {
+      });
+    },
+    getBaseData() {
+      this.$axios.get(this.baseUrl + 'apply/getuser', {
+        params: {
+        }
+      }).then(response => {
+        if (response.data.person && response.data.person !== '') {
+
+        } else {
+          this.$dialog.confirm({
+              title: '提示',
+              mes: '未登录，请登录！',
+              opts: () => {
+              }
+          });
+        };
+      }).catch(() => {
+          this.$dialog.confirm({
+              title: '提示',
+              mes: '请求失败！',
+              opts: () => {
+              }
+          });
+      });
     }
   },
   watch: {
@@ -109,7 +142,9 @@ export default {
     }
   }
 }
-
+.yd-confirm-ft>a.primary {
+  color: #eb4a4a!important;
+}
 @-webkit-keyframes rotation{
   from {-webkit-transform: rotate(0deg);}
   to {-webkit-transform: rotate(360deg);}
