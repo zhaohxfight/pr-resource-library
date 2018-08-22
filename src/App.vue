@@ -1,6 +1,6 @@
 <template>
   <yd-layout style="max-width:750px;">
-      <yd-navbar slot="navbar" bgcolor="#eb4a4a">
+      <yd-navbar slot="navbar" bgcolor="#eb4a4a" v-if="$route.path.indexOf('SearchDetial') < 0">
           <a href="javascript:;" @click="goback" slot="left">
               <yd-navbar-back-icon>返回</yd-navbar-back-icon>
           </a>

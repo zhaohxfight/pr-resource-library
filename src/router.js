@@ -7,6 +7,7 @@ import AboutSenhe from './views/AboutSenhe.vue'
 import AboutShowcang from './views/AboutShoucang.vue'
 import SearchResult from './views/SearchResult.vue'
 import SearchDetail from './views/SearchDetail.vue'
+import SearchDetail2 from './views/SearchDetail2.vue'
 
 Vue.use(Router)
 
@@ -32,6 +33,14 @@ export default new Router({
       path: '/searchDetial',
       name: 'SearchDetail',
       component: SearchDetail,
+      meta: {
+        keepAlive: true
+      }
+    },
+    {
+      path: '/searchDetial2',
+      name: 'SearchDetail2',
+      component: SearchDetail2,
       meta: {
         keepAlive: true
       }

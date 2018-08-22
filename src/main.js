@@ -5,6 +5,8 @@ import router from './router'
 import axios from 'axios'
 import YDUI from 'vue-ydui'
 import 'vue-ydui/dist/ydui.rem.css';
+// import VueScroller from 'vue-scroller'
+// Vue.use(VueScroller)
 Vue.config.productionTip = false
 Vue.use(YDUI);
 Vue.prototype.$axios = axios
