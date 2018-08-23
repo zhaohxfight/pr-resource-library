@@ -4,93 +4,65 @@
       <a href="javascript:;" @click="goback" slot="left">
           <yd-navbar-back-icon>返回</yd-navbar-back-icon>
       </a>
-      <div slot="center"><span v-if="headTitles === '公关资源库'" class="yd-navbar-center-title">{{headTitles}}</span><span v-else class="yd-navbar-center-title">{{name}}</span></div>
+      <div slot="center"><span v-if="headTitles === '公关资源库'" class="yd-navbar-center-title">{{headTitles}}</span><span v-else class="yd-navbar-center-title">{{result.base.name}}</span></div>
       <a href="javascript:;" slot="right" @click="allClose">
           关闭
       </a>
     </yd-navbar>
     <div class="content1">
         <div class="headimg">
-          <img src="http://cdn.aixifan.com/dotnet/artemis/u/cms/www/201711/03113043qpdpyqom.jpg" alt="">
+          <img :src="result.base.info.head_pic" alt="">
         </div>
+        <div class="h120"></div>
         <div class="content mart">
-            <div class="name">李思思</div>
-            <div><span>女</span><span>28岁</span><span>媒体人</span><span>汉族</span><span>公开档案</span></div>
-            <div>网易新闻北京分区</div>
+            <div class="name">{{result.base.name}}</div>
+            <div class="nameMes">{{result.base.info.description}}</div>
+            <div class="nameMes">{{result.base.info.company}}</div>
         </div>
     </div>
     <div class="content">
       <div class="dataList">
-        <div class="data-title">类别</div>
-        <div class="data-mes">
-          <div style="max-width: 4.3rem;">媒体人</div>
-        </div>
+        <div class="data-title">手机：{{result.base.info.phone}}</div>
+        <!-- <div class="data-mes">
+          <div style="max-width: 4.3rem;"></div>
+        </div> -->
       </div>
       <div class="dataList">
-        <div class="data-title">类别</div>
-        <div class="data-mes">
-          <div style="max-width: 4.3rem;">媒体人</div>
-        </div>
+        <div class="data-title">电话：{{result.base.info.tel}}</div>
       </div>
       <div class="dataList">
-        <div class="data-title">类别</div>
-        <div class="data-mes">
-          <div style="max-width: 4.3rem;">媒体人</div>
-        </div>
+        <div class="data-title">微信：{{result.base.info.wechat}}</div>
       </div>
       <div class="dataList">
-        <div class="data-title">类别</div>
-        <div class="data-mes">
-          <div style="max-width: 4.3rem;">媒体人</div>
-        </div>
+        <div class="data-title">邮箱：{{result.base.info.email}}</div>
       </div>
     </div>
     <div class="content">
-      <div class="headtitle">工作{{headTitles}}</div>
-      <div class="maintitle">副总裁、主编</div>
-      <div class="mes"><span>网易新闻北京分区</span>|<span>北京分区</span></div>
+      <div v-for="item in result.life.info" class="dataList">
+        <div class="data-title">{{item}}</div>
+      </div>
     </div>
     <div class="content">
-      <div class="headtitle">工作</div>
-      <div class="maintitle">副总裁、主编</div>
-      <div class="mes"><span>网易新闻北京分区</span>|<span>北京分区</span></div>
+      <div class="headtitle"><i class="work"></i>工作</div>
+      <div class="wkitem" v-for="item in result.company.info">
+        <div class="maintitle">{{item.name}}</div>
+        <div class="mes">{{item.description}}</div>
+      </div>
+
     </div>
     <div class="content">
-      <div class="headtitle">工作</div>
-      <div class="maintitle">副总裁、主编</div>
-      <div class="mes"><span>网易新闻北京分区</span>|<span>北京分区</span></div>
+      <div class="headtitle"><i class="live"></i>居住</div>
+        <div class="maintitle">{{result.live.info.name}}</div>
+        <div class="mes">{{result.live.info.description}}</div>
     </div>
     <div class="content">
-      <div class="headtitle">工作</div>
-      <div class="maintitle">副总裁、主编</div>
-      <div class="mes"><span>网易新闻北京分区</span>|<span>北京分区</span></div>
+      <div class="headtitle"><i class="arrive"></i>来访</div>
+      <div class="wkitem" v-for="item in result.visit.info">
+        <div class="maintitle">{{item.name}}</div>
+        <div class="mes"><span>{{item.description}}</span><span style="float:right">{{item.time}}</span></div>
+      </div>
     </div>
-    <div class="content">
-      <div class="headtitle">工作</div>
-      <div class="maintitle">副总裁、主编</div>
-      <div class="mes"><span>网易新闻北京分区</span>|<span>北京分区</span></div>
-    </div>
-    <div class="content">
-      <div class="headtitle">工作</div>
-      <div class="maintitle">副总裁、主编</div>
-      <div class="mes"><span>网易新闻北京分区</span>|<span>北京分区</span></div>
-    </div>
-    <div class="content">
-      <div class="headtitle">工作</div>
-      <div class="maintitle">副总裁、主编</div>
-      <div class="mes"><span>网易新闻北京分区</span>|<span>北京分区</span></div>
-    </div>
-    <div class="content">
-      <div class="headtitle">工作</div>
-      <div class="maintitle">副总裁、主编</div>
-      <div class="mes"><span>网易新闻北京分区</span>|<span>北京分区</span></div>
-    </div>
-    <div class="content">
-      <div class="headtitle">工作</div>
-      <div class="maintitle">副总裁、主编</div>
-      <div class="mes"><span>网易新闻北京分区</span>|<span>北京分区</span></div>
-    </div>
-    
+    <div style="width:100%;height:50px;"></div>
     <div class="bottomBtn">
       <yd-button-group>
           <yd-button size="large" type="primary" class="btnLeft btn">核对档案信息</yd-button>
@@ -116,7 +88,11 @@ export default {
   },
   data() {
     return {
-      result: [],
+      result: {
+        base: {
+          info: {}
+        }
+      },
       list2: list(),
       ovHeight: null,
       headTitles: '公关资源库',
@@ -128,13 +104,12 @@ export default {
   created() {
   },
   mounted() {
-      this.getResult()
-      document.getElementById('searchDetial2').addEventListener('scroll', this.handleScroll)
+    // this.getResult()
+    // document.getElementById('searchDetial2').addEventListener('scroll', this.handleScroll)
   },
   activated () {
-    this.result = []
+    this.result = {}
     this.getResult()
-    window.addEventListener('scroll', this.handleScroll)
   },
   methods: {
     getResult(val) {
@@ -146,6 +121,9 @@ export default {
       .then(response => {
         this.$dialog.loading.close();
         this.result = response.data.data
+        setTimeout(() => {
+          document.getElementById('searchDetial2').addEventListener('scroll', this.handleScroll)
+        }, 100)
       }).catch(() => {
       });
     },
@@ -161,11 +139,10 @@ export default {
     handleScroll () {
       const scrollTop  = document.getElementById('searchDetial2').scrollTop
       const header  = document.getElementById('changeHead')
-      const opcaity = (scrollTop / 200 >  1) ? 1 : scrollTop / 200
+      const opcaity = (scrollTop / 80 >  1) ? 1 : scrollTop / 80
       header.style.background='rgba(235, 74, 74,'+ opcaity +')';
       if (scrollTop > 10) {
-        this.headTitles = '李思思'
-        this.name = '李思思'
+        this.headTitles = this.result.base.name
       } else {
         this.headTitles = '公关资源库'
 
@@ -205,13 +182,21 @@ export default {
   background-color: #f2f2f2;
   .content1 {
     position: relative;
+    background: url('../assets/detailBg.jpg');
+    background-repeat:no-repeat;
+    background-size: contain; 
+    background-position: top;
+    .h120 {
+      width: 100%;
+      height: 90px;
+    }
     .headimg {
-      width: 2rem;
-      height: 2rem;
+      width: 1.85rem;
+      height: 1.85rem;
       position: absolute;
       left: 50%;
-      margin-left: -1rem;
-      margin-top: -1rem;
+      top: 55px;
+      margin-left: -0.925rem;
       
       img {
         width: 100%;
@@ -221,7 +206,6 @@ export default {
     }
   }
   .mart {
-    margin-top: 120px!important;
     text-align: center;
   }
   .content {
@@ -231,15 +215,80 @@ export default {
     border-radius: 5px;
     box-shadow: 1px 1px 10px #f2f2f2;
     padding: 20px;
+    .name {
+      margin-top: 30px;
+      font-size: .36rem;
+      line-height: .6rem;
+    }
+    .wkitem {
+      position: relative;
+    }
+    .wkitem::after{
+      content: "";
+      position: absolute;
+      z-index: 0;
+      left: 0;
+      width: 100%;
+      -webkit-transform: scaleY(.5);
+      transform: scaleY(.5);
+      -webkit-transform-origin: 0 0;
+      transform-origin: 0 0;
+      bottom: 0;
+      border-bottom: 1px solid #d8d8d8;
+    }
+    .nameMes {
+      font-size: .26rem;
+      line-height: .45rem;
+      color: #898989;
+      span {
+        margin: 0 3px;
+      }
+    }
+    .headtitle {
+      font-size: .3rem;
+      color: #eb4a4a;
+      margin-bottom: .4rem;
+      padding-left: .45rem;
+      position: relative;
+      i {
+        position: absolute;
+        width: .35rem;
+        height: .35rem;
+        left: 0;
+        top:1px;
+      }
+      .work {
+        background: url('../assets/01.jpg') no-repeat center/cover;
+      }
+      .live {
+        background: url('../assets/02.jpg') no-repeat center/cover;
+      }
+      .arrive {
+        background: url('../assets/03.jpg') no-repeat center/cover;
+      }
+    }
+    .maintitle {
+      font-size: .3rem;
+      color: #333333;
+      line-height: .58rem;
+    }
+    .mes {
+      font-size: .26rem;
+      color: #888888;
+      line-height: .58rem;
+      padding-bottom: .15rem;
+    }
   }
   .bottomBtn {
     width: 100%;
     position: fixed;
     bottom: 0;
     white-space: nowrap;
+    background-color: #f3f3f3;
     .btn {
       display: inline-block!important;
       height: 40px;
+      margin: .15rem 0;
     }
     .btnLeft {
       width: 58%;
@@ -257,9 +306,9 @@ export default {
     margin-top: 10px;
   }
   .dataList{
-    width:86%;
+    width:100%;
     margin: 0 auto;
-    margin-bottom: .28rem;
+    margin-bottom: .2rem;
     .dataList2 {
       margin-bottom: .28rem;
     }
@@ -270,11 +319,7 @@ export default {
       display: inline-block;
       color: #666;
       font-size: .28rem;
-      width: 1.57rem;
       line-height: .4rem;
-      text-align:justify;
-      text-align-last: justify;
-      text-justify:inter-cluster;
       vertical-align: top;
     }
     .data-title::after {
@@ -288,7 +333,7 @@ export default {
       color: #000;
       font-size: .28rem;
       line-height: .4rem;
-      margin-left: .5rem;
+      margin-left: .2rem;
       a {
         text-decoration: underline;
       }

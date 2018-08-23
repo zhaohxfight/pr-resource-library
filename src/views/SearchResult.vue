@@ -113,6 +113,9 @@ export default {
         vm.from = from.path;
     })
   },
+  beforeRouteLeave(to, from, next) { 
+    // this.list = []
+  },
   methods: {      
     getResult() {
       this.nodata = false
@@ -167,7 +170,8 @@ export default {
       this.$router.push('/')
     },
     gotoSearchDetial(id) {
-      this.$router.push({path:'/SearchDetial',query:{id:id}})
+      console.log(id)
+      this.$router.push({path:'/SearchDetial2',query:{id:id}})
     },
     showSelect() {
       this.setBottom()
