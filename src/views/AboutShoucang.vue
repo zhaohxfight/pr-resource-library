@@ -108,7 +108,7 @@ export default {
       this.show1 = false
     },
     gotoSearchDetial(id) {
-      this.$router.push({path:'/SearchDetial',query:{id:id}})
+      this.$router.push({path:'/SearchDetial2',query:{id:id}})
     },
     showSelect() {
       this.setBottom()

@@ -13,12 +13,13 @@
             <span slot="title">{{item.name}}</span>
             <yd-list-other slot="other">
                 <div>
-                  <div class="listMes">性别: {{item.sex}}</div>
-                  <div class="listMes">名族: {{item.nation}}</div>
-                  <div class="listMes">出生年月: {{item.birthday}}</div>
-                  <div class="listMes">企业名称: {{item.company[0]}}</div>
+                  <div class="listMes">女 . 28岁 . 汉族</div>
+                  <div class="listMes">网易新闻北京分部</div>
                 </div>
-            <div class="listbadge"><yd-badge shape="square">{{item.type[0]}}</yd-badge></div>
+            <div class="listbadge">
+              <yd-badge class="red" shape="square">{{item.type[0]}}</yd-badge>
+              <yd-badge class="blue" shape="square">{{item.type[0]}}</yd-badge>
+            </div>
             </yd-list-other>
           </yd-list-item>
         </yd-list>
@@ -99,6 +100,7 @@ export default {
   activated () {
     setTimeout(() => {
       if (this.from === '/' && this.$route.query.type && this.$route.query.type !== ''){
+        this.list = []
         this.$refs['searchinput'].$refs.search.$el.children[0].focus()
         this.filters.name = '' 
         this.filters.sex = ''
@@ -112,9 +114,6 @@ export default {
       console.log(from.path)
         vm.from = from.path;
     })
-  },
-  beforeRouteLeave(to, from, next) { 
-    // this.list = []
   },
   methods: {      
     getResult() {
@@ -212,9 +211,63 @@ export default {
   .asscroll {
     width: 100%;
     height: calc(100vh - 1rem - 90px);
+    background-color: #f6f6f6;
     position: relative;
     overflow-x: hidden;
     overflow-y: scroll!important;
+  }
+  .yd-list-theme4 {
+    width: 96%;
+    margin: 0 auto;
+    background-color: #f6f6f6;
+  }
+  .yd-list-item {
+
+  }
+  .yd-list-item {
+    border-radius: 5px;
+    box-shadow: 0px 1px 10px #d8d7d7;
+    margin: 13px 0;
+    padding: 18px 8px!important;
+    background-color: #fff;
+    .yd-list-img{
+      width: 1.4rem!important;
+      padding: .7rem 0!important;
+      margin: 0 .25rem;
+      border-radius: 50%;
+    }
+    .yd-list-mes {
+      position: relative;
+      .listbadge {
+        position: absolute;
+        top: 0;
+        left: 1.5rem;
+        .yd-badge {
+          background-color:transparent;
+          font-size: .16rem;
+          padding: 3px .1rem;
+          border-radius: 3px;
+          margin-right: .13rem;
+        }
+        .red {
+          color: #f85b62;
+          border: 1px solid #f85b62;
+        }
+        .blue {
+          color: #5b96f8;
+          border: 1px solid #5b96f8;
+        }
+      }
+      .listMes {
+        line-height: .35rem;
+      } 
+  }
+}
+  .yd-list-title {
+    font-size: .32rem;
+  }
+  .yd-list-theme4 .yd-list-item:not(:last-child):after {
+    border-bottom: 0 solid #d9d9d9;
   }
 }
 .nodata {
@@ -278,25 +331,6 @@ export default {
   color: #eb4a4a;
   .yd-accordion-head-arrow:after{
     border-bottom: 7px solid #eb4a4a;
-  }
-}
-.yd-list-item {
-  .yd-list-mes {
-    position: relative;
-    .listbadge {
-      position: absolute;
-      top: 0;
-      right: .5rem;
-      .yd-badge {
-        background-color: #e9eefb;
-        color: #265cd7;
-        font-size: .26rem;
-        padding: 5px .2rem;
-      }
-    }
-    .listMes {
-      line-height: .35rem;
-    } 
   }
 }
 .pb10 {

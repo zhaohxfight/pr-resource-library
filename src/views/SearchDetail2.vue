@@ -1,10 +1,10 @@
 <template>
   <div id="searchDetial2" class="searchDetial2 page-content">
-    <yd-navbar id="changeHead" slot="navbar" style="background:rgb(235, 74, 74, 0)" fixed>
+    <yd-navbar id="changeHead" slot="navbar" bgcolor="rgb(235, 74, 74, 0)" fixed>
       <a href="javascript:;" @click="goback" slot="left">
           <yd-navbar-back-icon>返回</yd-navbar-back-icon>
       </a>
-      <div slot="center"><span v-if="headTitles === '公关资源库'" class="yd-navbar-center-title">{{headTitles}}</span><span v-else class="yd-navbar-center-title">{{result.base.name}}</span></div>
+      <div slot="center"><span v-show="headTitles === '公关资源库'" class="yd-navbar-center-title">{{headTitles}}</span><span class="yd-navbar-center-title" v-show="headTitles !== '公关资源库'">{{result.base.name}}</span> </div>
       <a href="javascript:;" slot="right" @click="allClose">
           关闭
       </a>
@@ -37,12 +37,12 @@
         <div class="data-title">邮箱：{{result.base.info.email}}</div>
       </div>
     </div>
-    <div class="content">
+    <div class="content" v-if="result.life">
       <div v-for="item in result.life.info" class="dataList">
         <div class="data-title">{{item}}</div>
       </div>
     </div>
-    <div class="content">
+    <div class="content" v-if="result.company">
       <div class="headtitle"><i class="work"></i>工作</div>
       <div class="wkitem" v-for="item in result.company.info">
         <div class="maintitle">{{item.name}}</div>
@@ -50,14 +50,38 @@
       </div>
 
     </div>
-    <div class="content">
+    <div class="content" v-if="result.live">
       <div class="headtitle"><i class="live"></i>居住</div>
         <div class="maintitle">{{result.live.info.name}}</div>
         <div class="mes">{{result.live.info.description}}</div>
     </div>
-    <div class="content">
-      <div class="headtitle"><i class="arrive"></i>来访</div>
+    <div class="content" v-if="result.visit">
+      <div class="headtitle"><i class="visit"></i>来访</div>
       <div class="wkitem" v-for="item in result.visit.info">
+        <div class="maintitle">{{item.name}}</div>
+        <div class="mes"><span>{{item.description}}</span><span style="float:right">{{item.time}}</span></div>
+      </div>
+    </div>
+
+    <div class="content" v-if="result.meeting">
+      <div class="headtitle"><i class="meeting"></i>会务</div>
+      <div class="wkitem" v-for="item in result.meeting.info">
+        <div class="maintitle">{{item.name}}</div>
+        <div class="mes"><span>{{item.description}}</span><span style="float:right">{{item.time}}</span></div>
+      </div>
+    </div>
+
+    <div class="content" v-if="result.activity">
+      <div class="headtitle"><i class="activity"></i>活动</div>
+      <div class="wkitem" v-for="item in result.activity.info">
+        <div class="maintitle">{{item.name}}</div>
+        <div class="mes"><span>{{item.description}}</span><span style="float:right">{{item.time}}</span></div>
+      </div>
+    </div>
+
+    <div class="content" v-if="result.cooperation">
+      <div class="headtitle"><i class="cooperation"></i>合作</div>
+      <div class="wkitem" v-for="item in result.cooperation.info">
         <div class="maintitle">{{item.name}}</div>
         <div class="mes"><span>{{item.description}}</span><span style="float:right">{{item.time}}</span></div>
       </div>
@@ -65,7 +89,7 @@
     <div style="width:100%;height:50px;"></div>
     <div class="bottomBtn">
       <yd-button-group>
-          <yd-button size="large" type="primary" class="btnLeft btn">核对档案信息</yd-button>
+          <yd-button size="large" type="primary" class="btnLeft btn">核对对接信息</yd-button>
           <yd-button size="large" type="primary" class="btnRight btn" @click="this.headTitles === '110'">收藏</yd-button>
       </yd-button-group>
     </div>
@@ -217,6 +241,7 @@ export default {
     padding: 20px;
     .name {
       margin-top: 30px;
+      margin-bottom: 5px;
       font-size: .36rem;
       line-height: .6rem;
     }
@@ -238,7 +263,7 @@ export default {
     }
     .nameMes {
       font-size: .26rem;
-      line-height: .45rem;
+      line-height: .55rem;
       color: #898989;
       span {
         margin: 0 3px;
@@ -247,7 +272,7 @@ export default {
     .headtitle {
       font-size: .3rem;
       color: #eb4a4a;
-      margin-bottom: .4rem;
+      margin-bottom: .2rem;
       padding-left: .45rem;
       position: relative;
       i {
@@ -263,14 +288,24 @@ export default {
       .live {
         background: url('../assets/02.jpg') no-repeat center/cover;
       }
-      .arrive {
+      .visit {
         background: url('../assets/03.jpg') no-repeat center/cover;
+      }
+      .meeting  {
+        background: url('../assets/04.jpg') no-repeat center/cover;
+      }
+      .activity {
+        background: url('../assets/05.jpg') no-repeat center/cover;
+      }
+      .cooperation {
+        background: url('../assets/06.jpg') no-repeat center/cover;
       }
     }
     .maintitle {
       font-size: .3rem;
       color: #333333;
       line-height: .58rem;
+      margin-top: .2rem;
     }
     .mes {
       font-size: .26rem;
