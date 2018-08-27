@@ -199,7 +199,7 @@ export default {
       const par = {
         id: this.$route.query.id
       }
-      this.$axios.post(this.baseUrl + 'people/detail', par)
+      this.$axios.post(this.baseUrl + 'examine/detail', par)
       .then(response => {
         this.$dialog.loading.close();
         this.result = response.data.data

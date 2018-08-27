@@ -1,21 +1,25 @@
 <template>
-  <div class="about-shenhe page-content">
+  <div class="about-shoucang page-content">
     <!-- <yd-flexbox ref="tabselectMain">
       <yd-flexbox-item><div class="tabselect" @click="showSelect()">{{radio1 | radioType}}<span :class="{'yd-accordion-rotated': show1}" class="yd-accordion-head-arrow"></span></div></yd-flexbox-item>
     </yd-flexbox> -->
     <yd-infinitescroll :callback="getResult" ref="infinitescrollDemo">
           <yd-list theme="4" slot="list">
-            <yd-list-item v-for="item in list" :key="item.id" @click.native="gotoSearchDetial(item.id)">
+            <yd-list-item v-for="(item, index) in list" :key="item.id" @click.native="gotoSearchDetial(item.id)">
               <img slot="img" :src="item.head_pic">
               <span slot="title">{{item.name}}</span>
               <yd-list-other slot="other">
                   <div>
-                    <div class="listMes">性别: {{item.sex}}</div>
-                    <div class="listMes">名族: {{item.nation}}</div>
-                    <div class="listMes">出生年月: {{item.birthday}}</div>
-                    <div class="listMes">企业名称: {{item.company[0]}}</div>
+                    <div class="listMes">{{item.description}}</div>
+                    <div class="listMes listMes2">{{item.company}}</div>
                   </div>
-              <div class="listbadge"><yd-badge shape="square">{{item.type[0]}}</yd-badge></div>
+              <div class="listbadge">
+                <yd-badge class="red" shape="square">{{item.type[0]}}</yd-badge>
+                <yd-badge class="blue" shape="square">{{item.search_secret_level}}</yd-badge>
+              </div>
+              <!-- <div class="collected" @click.stop="collected(item.id, item.is_collect, index)">
+                <yd-icon :name="item.is_collect === 1 ? 'star': 'star-outline'"  size=".45rem" color="#ff9c00"></yd-icon>
+              </div> -->
               </yd-list-other>
             </yd-list-item>
           </yd-list>
@@ -136,7 +140,7 @@ export default {
 };
 </script>
 <style lang="scss">
-.about-shenhe {
+.about-shoucang {
   .yd-search-input {
     background-color: #fff;
     .search-input {
@@ -145,6 +149,74 @@ export default {
     .cancel-text {
       color: #eb4a4a;
     }
+  }
+    .yd-list-theme4 {
+    width: 96%;
+    margin: 0 auto;
+    background-color: #f6f6f6;
+  }
+  .yd-list-item {
+    border-radius: 5px;
+    box-shadow: 0px 1px 10px #d8d7d7;
+    margin: 13px 0;
+    padding: 18px 8px!important;
+    background-color: #fff;
+    .yd-list-img{
+      width: 1.4rem!important;
+      padding: .7rem 0!important;
+      margin: 0 .25rem;
+      border-radius: 50%;
+    }
+    .collected {
+      position: absolute;
+      z-index: 999;
+      top:50%;
+      margin-top: -0.225rem;
+      right: .1rem;
+    }
+    .yd-list-mes {
+      position: relative;
+      background-color: transparent; 
+      .listbadge {
+        position: absolute;
+        top: 0;
+        left: 2.2rem;
+        width: 2.5rem;
+        .yd-badge {
+          background-color:transparent;
+          font-size: .16rem;
+          padding: 3px .1rem;
+          border-radius: 3px;
+          margin-right: .13rem;
+        }
+        .red {
+          color: #f85b62;
+          border: 1px solid #f85b62;
+        }
+        .blue {
+          color: #5b96f8;
+          border: 1px solid #5b96f8;
+        }
+      }
+      .listMes {
+        line-height: .35rem;
+        font-size: .26rem;
+        max-width: 4rem;
+      }
+      .listMes2 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+    }
+  }
+  .yd-list-title {
+    font-size: .32rem;
+  }
+  .yd-list-theme4 .yd-list-item:not(:last-child):after {
+    border-bottom: 0 solid #d9d9d9;
   }
 }
 .nodata {
@@ -186,25 +258,6 @@ export default {
   color: #fff;
   background-color: #eb4a4a;
   border-top: 1px solid #e3e3e3;
-}
-.yd-list-item {
-  .yd-list-mes {
-    position: relative;
-    .listbadge {
-      position: absolute;
-      top: 0;
-      right: .5rem;
-      .yd-badge {
-        background-color: #e9eefb;
-        color: #265cd7;
-        font-size: .26rem;
-        padding: 5px .2rem;
-      }
-    }
-    .listMes {
-      line-height: .35rem;
-    } 
-  }
 }
 .setselect {
   padding: 0 5%;

@@ -5,20 +5,23 @@
       <yd-flexbox-item><div class="tabselect se1" :class="{'tabselect1': !show1, 'selectedbtn': show1}" @click="showSelect() ">资源类别<span :class="{'yd-accordion-rotated': show1}" class="yd-accordion-head-arrow"></span></div></yd-flexbox-item>
       <yd-flexbox-item><div class="tabselect" :class="{'tabselect1': !show2, 'selectedbtn': show2}" @click="showRadio()">性别<span :class="{'yd-accordion-rotated': show2}" class="yd-accordion-head-arrow"></span></div></yd-flexbox-item>
     </yd-flexbox>
-    <div class="asscroll">
+    <div class="asscroll" :class="{'mb10': show1,'mb102': show2}">
       <yd-infinitescroll :callback="getResult" ref="infinitescrollDemo">
         <yd-list theme="4" slot="list">
-          <yd-list-item v-for="item in list" :key="item.id" @click.native="gotoSearchDetial(item.id)">
+          <yd-list-item v-for="(item, index) in list" :key="item.id" @click.native="gotoSearchDetial(item.id)">
             <img slot="img" :src="item.head_pic">
             <span slot="title">{{item.name}}</span>
             <yd-list-other slot="other">
                 <div>
-                  <div class="listMes">女 . 28岁 . 汉族</div>
-                  <div class="listMes">网易新闻北京分部</div>
+                  <div class="listMes">{{item.description}}</div>
+                  <div class="listMes listMes2">{{item.company}}</div>
                 </div>
             <div class="listbadge">
               <yd-badge class="red" shape="square">{{item.type[0]}}</yd-badge>
-              <yd-badge class="blue" shape="square">{{item.type[0]}}</yd-badge>
+              <yd-badge class="blue" shape="square">{{item.search_secret_level}}</yd-badge>
+            </div>
+            <div class="collected" @click.stop="collected(item.id, item.is_collect, index)">
+              <yd-icon :name="item.is_collect === 1 ? 'star': 'star-outline'"  size=".45rem" color="#ff9c00"></yd-icon>
             </div>
             </yd-list-other>
           </yd-list-item>
@@ -147,6 +150,35 @@ export default {
       }).catch(() => {
       });
     },
+    collected(id,ifData,index) {
+      const par = ifData === 0 ? {
+        people_id: id,
+        type: 1
+      } : {
+        people_id: id,
+        type: 0
+      }
+      this.$axios.post(this.baseUrl + 'add/collect', par)
+      .then(response => {
+        if (response.data.code === 0) {
+          this.list[index].is_collect = par.type
+          if (par.type === 1) {
+            this.$dialog.toast({
+                mes: '收藏成功',
+                timeout: 1000,
+                icon: 'success'
+            });
+          } else {
+            this.$dialog.toast({
+                mes: '已取消收藏',
+                timeout: 1000,
+                icon: 'error'
+            });
+          }
+        }
+      }).catch(() => {
+      });
+    },
     selectHandle() {
       this.$dialog.loading.open('加载中...');
       this.list = []
@@ -222,9 +254,6 @@ export default {
     background-color: #f6f6f6;
   }
   .yd-list-item {
-
-  }
-  .yd-list-item {
     border-radius: 5px;
     box-shadow: 0px 1px 10px #d8d7d7;
     margin: 13px 0;
@@ -236,12 +265,21 @@ export default {
       margin: 0 .25rem;
       border-radius: 50%;
     }
+    .collected {
+      position: absolute;
+      z-index: 999;
+      top:50%;
+      margin-top: -0.225rem;
+      right: .1rem;
+    }
     .yd-list-mes {
       position: relative;
+      background-color: transparent; 
       .listbadge {
         position: absolute;
         top: 0;
-        left: 1.5rem;
+        left: 2.2rem;
+        width: 2.5rem;
         .yd-badge {
           background-color:transparent;
           font-size: .16rem;
@@ -260,9 +298,18 @@ export default {
       }
       .listMes {
         line-height: .35rem;
-      } 
+        font-size: .26rem;
+        max-width: 4rem;
+      }
+      .listMes2 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+    }
   }
-}
   .yd-list-title {
     font-size: .32rem;
   }
@@ -274,7 +321,7 @@ export default {
   width: 100%;
   text-align: center;
   color: #888;
-  top: 0;
+  top: 20px;
   font-size: .28rem;
   position: fixed;
 }
@@ -338,5 +385,11 @@ export default {
 }
 .pb102 {
   padding-bottom: 10px;
+}
+.mb10 {
+  margin-top: -10px;
+}
+.mb102 {
+  margin-top: -10px;
 }
 </style>
