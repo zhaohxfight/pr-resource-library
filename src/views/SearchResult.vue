@@ -56,7 +56,7 @@
             </yd-radio-group>
           </div>
           <yd-flexbox ref="tabselectMain">
-            <yd-flexbox-item><div class="tabselect btn1" @click="show2 = false">取消</div></yd-flexbox-item>
+            <yd-flexbox-item><div class="tabselect btn1" @click="reSelect2()">重置</div></yd-flexbox-item>
             <yd-flexbox-item><div class="tabselect btn2" @click="selectHandle()">确定</div></yd-flexbox-item>
           </yd-flexbox>
       </div>
@@ -100,6 +100,14 @@ export default {
     this.$refs['searchinput'].$refs.search.$el.children[0].focus()
     this.getSetting()
   },
+  computed: {
+    type () {
+      return this.$store.state.type
+    },
+    peopleId () {
+      return this.$store.state.peopleId
+    }
+  },
   activated () {
     setTimeout(() => {
       if (this.from === '/' && this.$route.query.type && this.$route.query.type !== ''){
@@ -109,6 +117,12 @@ export default {
         this.filters.sex = ''
         this.filters.type = JSON.parse(this.$route.query.type)
       }
+      let that = this
+      this.list.forEach(function (item, index, data) {
+        if (item.id == that.$store.state.peopleId) {
+          item.is_collect = that.$store.state.type
+        }
+      })
     },100)
   },
   beforeRouteEnter (to, from, next) {
@@ -162,6 +176,8 @@ export default {
       .then(response => {
         if (response.data.code === 0) {
           this.list[index].is_collect = par.type
+          this.$store.state.type = par.type
+          this.$store.state.peopleId = this.$route.query.id
           if (par.type === 1) {
             this.$dialog.toast({
                 mes: '收藏成功',
@@ -223,6 +239,9 @@ export default {
     },
     reSelect() {
       this.filters.type = []
+    },
+    reSelect2() {
+      this.filters.sex = ''
     }
   },
   watch: {
@@ -267,7 +286,7 @@ export default {
     }
     .collected {
       position: absolute;
-      z-index: 999;
+      z-index: 98;
       top:50%;
       margin-top: -0.225rem;
       right: .1rem;
@@ -283,7 +302,8 @@ export default {
         .yd-badge {
           background-color:transparent;
           font-size: .16rem;
-          padding: 3px .1rem;
+          padding-top: 4px;
+          line-height: .16rem;
           border-radius: 3px;
           margin-right: .13rem;
         }
@@ -382,9 +402,13 @@ export default {
 }
 .pb10 {
   padding-bottom: 10px;
+  position: relative;
+  z-index: 99;
 }
 .pb102 {
   padding-bottom: 10px;
+  position: relative;
+  z-index: 99;
 }
 .mb10 {
   margin-top: -10px;

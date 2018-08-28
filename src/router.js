@@ -67,7 +67,7 @@ export default new Router({
       name: 'aboutLuru',
       component: AboutLuru,
       meta: {
-        keepAlive: true
+        keepAlive: false
       }
     },
     {

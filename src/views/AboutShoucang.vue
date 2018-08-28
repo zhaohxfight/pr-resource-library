@@ -141,6 +141,7 @@ export default {
 </script>
 <style lang="scss">
 .about-shoucang {
+  background-color: #f6f6f6;
   .yd-search-input {
     background-color: #fff;
     .search-input {
@@ -185,7 +186,8 @@ export default {
         .yd-badge {
           background-color:transparent;
           font-size: .16rem;
-          padding: 3px .1rem;
+          padding-top: 4px;
+          line-height: .16rem;
           border-radius: 3px;
           margin-right: .13rem;
         }

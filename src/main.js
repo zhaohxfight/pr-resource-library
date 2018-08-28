@@ -5,6 +5,10 @@ import router from './router'
 import axios from 'axios'
 import YDUI from 'vue-ydui'
 import 'vue-ydui/dist/ydui.rem.css';
+import Vuex from 'vuex'
+import store from './vuex/store'
+
+Vue.use(Vuex)
 // import VueScroller from 'vue-scroller'
 // Vue.use(VueScroller)
 Vue.config.productionTip = false
@@ -21,5 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')

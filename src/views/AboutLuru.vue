@@ -73,10 +73,11 @@ export default {
   },
   mounted() {
     this.allh = window.innerHeight
-    this.$dialog.loading.open('加载中...');
-    this.list = []
+    this.$dialog.loading.open('加载中...'); 
+    this.getResult()
   },
   activated () {
+    console.log(11)
     this.getResult()
   },
   filters: {
@@ -150,6 +151,10 @@ export default {
 </script>
 <style lang="scss">
 .about-luru {
+  background-color: #f6f6f6;
+  .yd-flexbox {
+    background-color: #fff;
+  }
   .yd-search-input {
     background-color: #fff;
     .search-input {
@@ -201,7 +206,8 @@ export default {
         .yd-badge {
           background-color:transparent;
           font-size: .16rem;
-          padding: 3px .1rem;
+          padding-top: 4px;
+          line-height: .16rem;
           border-radius: 3px;
           margin-right: .13rem;
         }

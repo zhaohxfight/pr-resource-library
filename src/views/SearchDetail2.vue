@@ -218,6 +218,8 @@ export default {
       .then(response => {
         if (response.data.code === 0) {
           this.result.base.info.is_collect = par.type
+          this.$store.state.type = par.type
+          this.$store.state.peopleId = this.$route.query.id
           if (par.type === 1) {
             this.$dialog.toast({
                 mes: '收藏成功',
