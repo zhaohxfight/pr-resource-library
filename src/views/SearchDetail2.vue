@@ -1,5 +1,5 @@
 <template>
-  <div id="searchDetial2" class="searchDetial2 page-content">
+  <div id="searchDetial2" class="searchDetial2 page-content" ref="sd2">
     <yd-navbar id="changeHead" slot="navbar" bgcolor="rgb(235, 74, 74, 0)" fixed>
       <a href="javascript:;" @click="goback" slot="left">
           <yd-navbar-back-icon>返回</yd-navbar-back-icon>
@@ -95,7 +95,7 @@
           <yd-button size="large" type="primary" class="btnRight btn" :class="{'btnRight2' : result.base.info.is_collect === 1}" @click.native="collected()">{{result.base.info.is_collect === 0 ? '收藏': '取消收藏'}}</yd-button>
       </yd-button-group>
     </div>
-    <yd-popup v-model="showDetial" position="right">
+    <!-- <yd-popup v-model="showDetial" position="right">
       <yd-navbar bgcolor="#eb4a4a" fixed>
         <a href="javascript:;" @click="showDetial = false" slot="left">
           <yd-navbar-back-icon></yd-navbar-back-icon>
@@ -108,7 +108,7 @@
           <div v-if="item2.list && item2.list.length > 0">
             <div class="data-time">{{item2.subtitle}}</div>
             <div v-for="item3 in item2.list" class="dataList2">
-              <div class="data-title">{{item3.name}}</div>
+              <div class="data-title">{{item3.name}}213123</div>
               <div class="data-mes">
                 <div v-if="item3.is_html && item3.is_html === '1'">
                   <div v-html="item3.value"></div>
@@ -126,7 +126,7 @@
           
           </div>
           <div v-else>
-            <div class="data-title">{{item2.name}}</div>
+            <div class="data-title">{{item2.name}}:</div>
             <div class="data-mes">
               <div v-if="item2.is_html && item2.is_html === '1'">
                 <div v-html="item2.value"></div>
@@ -143,7 +143,7 @@
           </div>
         </div>
       </div>
-    </yd-popup>
+    </yd-popup> -->
   </div>
 </template>
 
@@ -172,6 +172,7 @@ export default {
       ovHeight: null,
       headTitles: '公关资源库',
       showDetial: false,
+      from: '',
       showDetialMes: {
         title: '',
         time: '',
@@ -185,13 +186,27 @@ export default {
   created() {
   },
   mounted() {
-    // this.getResult()
-    // document.getElementById('searchDetial2').addEventListener('scroll', this.handleScroll)
+    this.result = {}
   },
   activated () {
-    this.result = {}
-    this.showDetial = false
-    this.getResult()
+    setTimeout(() => {
+      console.log(this.from)
+      if (this.from === '/SearchDetialS'){
+        this.$refs.sd2.scrollTop = this.$store.state.pageYOffsetS;
+      } else {
+        this.$refs.sd2.scrollTop = 0
+        const header  = document.getElementById('changeHead')
+        header.style.background = 'rgba(235, 74, 74,0)'
+        this.headTitles = '公关资源库'
+        this.getResult()
+      }
+    },0)
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm=>{
+      console.log(from.path)
+        vm.from = from.path;
+    })
   },
   methods: {
     getResult(val) {
@@ -256,7 +271,9 @@ export default {
         this.showDetialMes.data = this.result[mes].data[index].list
         this.showDetialMes.time = this.result[mes].data[index].subtitle
       }
-      this.showDetial = true
+      this.$store.commit('setPageDetialMes', this.showDetialMes);
+      this.$store.commit('setPageYOffsetS', this.$refs.sd2.scrollTop);
+      this.$router.push({path:'/SearchDetialS'})
     },
     itemClickHandler(item) {
       this.$dialog.toast({ mes: `搜索：${item}` });
@@ -265,13 +282,13 @@ export default {
       this.$dialog.toast({ mes: `搜索：${value}` });
     },
     isArray(obj){ 
-      return (typeof obj=='object') && obj.constructor == Array; 
+      return (typeof obj == 'object') && obj.constructor == Array; 
     },
     handleScroll () {
       const scrollTop  = document.getElementById('searchDetial2').scrollTop
       const header  = document.getElementById('changeHead')
       const opcaity = (scrollTop / 80 >  1) ? 1 : scrollTop / 80
-      header.style.background='rgba(235, 74, 74,'+ opcaity +')';
+      header.style.background='rgba(235, 74, 74,'+ opcaity +')'
       if (scrollTop > 10) {
         this.headTitles = this.result.base.name
       } else {
@@ -505,9 +522,6 @@ export default {
         font-size: .28rem;
         width: 1.57rem;
         line-height: .4rem;
-        text-align:justify;
-        text-align-last: justify;
-        text-justify:inter-cluster;
         vertical-align: top;
       }
       .data-title::after {

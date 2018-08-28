@@ -5,7 +5,7 @@
       <yd-flexbox-item><div class="tabselect se1" :class="{'tabselect1': !show1, 'selectedbtn': show1}" @click="showSelect() ">资源类别<span :class="{'yd-accordion-rotated': show1}" class="yd-accordion-head-arrow"></span></div></yd-flexbox-item>
       <yd-flexbox-item><div class="tabselect" :class="{'tabselect1': !show2, 'selectedbtn': show2}" @click="showRadio()">性别<span :class="{'yd-accordion-rotated': show2}" class="yd-accordion-head-arrow"></span></div></yd-flexbox-item>
     </yd-flexbox>
-    <div class="asscroll" :class="{'mb10': show1,'mb102': show2}">
+    <div class="asscroll" ref="asscroll" :class="{'mb10': show1,'mb102': show2}">
       <yd-infinitescroll :callback="getResult" ref="infinitescrollDemo">
         <yd-list theme="4" slot="list">
           <yd-list-item v-for="(item, index) in list" :key="item.id" @click.native="gotoSearchDetial(item.id)">
@@ -116,14 +116,16 @@ export default {
         this.filters.name = '' 
         this.filters.sex = ''
         this.filters.type = JSON.parse(this.$route.query.type)
+      } else {
+        this.$refs.asscroll.scrollTop = this.$store.state.pageYOffset;
+        let that = this
+        this.list.forEach(function (item, index, data) {
+          if (item.id == that.$store.state.peopleId) {
+            item.is_collect = that.$store.state.type
+          }
+        })
       }
-      let that = this
-      this.list.forEach(function (item, index, data) {
-        if (item.id == that.$store.state.peopleId) {
-          item.is_collect = that.$store.state.type
-        }
-      })
-    },100)
+    },0)
   },
   beforeRouteEnter (to, from, next) {
     console.log(11)
@@ -217,7 +219,8 @@ export default {
       this.$router.push('/')
     },
     gotoSearchDetial(id) {
-      console.log(id)
+      this.$store.commit('setPageYOffset', this.$refs.asscroll.scrollTop);
+      console.log(this.$store)
       this.$router.push({path:'/SearchDetial2',query:{id:id}})
     },
     showSelect() {

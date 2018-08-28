@@ -10,7 +10,7 @@
           </a>
       </yd-navbar>
         <keep-alive>
-          <router-view  v-if="$route.meta.keepAlive" ref="appmain"></router-view>
+            <router-view  v-if="$route.meta.keepAlive" ref="appmain"></router-view>
         </keep-alive>
         <router-view v-if="!$route.meta.keepAlive"></router-view>
       <yd-tabbar slot="tabbar" v-if="$route.path === '/' || $route.path === '/about'">
@@ -185,5 +185,10 @@ width: 100%;
 .headSelect {
   display: flex;
 }
-
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 </style>

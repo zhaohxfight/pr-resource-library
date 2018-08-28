@@ -140,9 +140,6 @@ export default {
       font-size: .28rem;
       width: 1.57rem;
       line-height: .4rem;
-      text-align:justify;
-      text-align-last: justify;
-      text-justify:inter-cluster;
       vertical-align: top;
     }
     .data-title::after {

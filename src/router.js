@@ -9,6 +9,7 @@ import SearchResult from './views/SearchResult.vue'
 import SearchDetail from './views/SearchDetail.vue'
 import SearchDetail2 from './views/SearchDetail2.vue'
 import SearchDetail3 from './views/SearchDetail3.vue'
+import SearchDetailS from './views/SearchDetailS.vue'
 
 Vue.use(Router)
 
@@ -36,6 +37,14 @@ export default new Router({
       component: SearchDetail,
       meta: {
         keepAlive: true
+      }
+    },
+    {
+      path: '/searchDetialS',
+      name: 'SearchDetailS',
+      component: SearchDetailS,
+      meta: {
+        keepAlive: false
       }
     },
     {
